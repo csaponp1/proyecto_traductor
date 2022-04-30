@@ -1,0 +1,17 @@
+int main(void){
+	int x = 2;
+	int y = 3;
+	char e = 'e';
+	into data;
+	cout<<"ingrese un numero"<<endl;
+	cin>>x;
+	cout<<"ingrese otro numero"<<endl;
+	cin>>y;
+	if(x<y){
+		cout<<" el numero"<<x<<"es menor que "<<y<<endl;
+	}
+	else{
+		cout<<"fin del programa"<<endl;
+	}
+	getch();
+	}

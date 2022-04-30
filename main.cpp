@@ -2,7 +2,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <string>
+#include <conio.h>
 //#include <cstring>
+
 using namespace std;
 
 void leer();
@@ -10,7 +12,7 @@ void crear();
 void actualizar();
 void eliminar();
 void in_cod();
-void traducir(string t);
+void ordenar(string texto);
 
 const char *nom_arch="archivo.dat";
 const char *tem="temporal.dat";
@@ -28,7 +30,12 @@ main(){
 	string codigo;
 	do{
 			system("cls");
-			cout<<"Escriba el numero de la opcio que desea realizar:\n1. Ver listado de palabra\n2. Agregar palabras al listado\n3. Actualizar una palabra del listado\n4. Eliminar una palabra del listado\n5. Traductor de codigo fuente\n";
+			cout<<"Escriba el numero de la opcion que desea realizar: "<<endl;
+			cout<<"1. Ver listado de palabra"<<endl;
+			cout<<"2. Agregar palabras al listado"<<endl;
+			cout<<"3. Actualizar una palabra del listado"<<endl;
+			cout<<"4. Eliminar una palabra del listado"<<endl;
+			cout<<"5. Traductor de codigo fuente"<<endl;
 			cin>>n;
 		switch(n){
 			case 1:
@@ -41,8 +48,10 @@ main(){
 				eliminar(); break;
 			case 5:
 				in_cod(); break;
+			
 			default:
 				cout<<"El numero seleccionado no es una opcion, vuelva a intentarlo";			
+				break;
 		}
 		
 			cout<<"\nDesea Realizar otra accion? (s/n): ";
@@ -172,37 +181,83 @@ void in_cod(){
 		if(texto[i]=="#@"){
 			i=99;
 		}else{
-		traducir(texto[i]);	
+		//traducir(texto[i]);
+		ordenar(texto[i]);
 		}
 		
 	}
 }
 
-void traducir(string texto){
-	
-	FILE* archivo=fopen(nom_arch,"rb");
-	if(!archivo){
-		archivo=fopen(nom_arch,"w+b");
-	}
-	Traductor traductor;
-	int id=0;
-	
-	fread(&traductor,sizeof(Traductor),1,archivo);
-	do{
-		id;
-		string in(string(traductor.palabra));
-		string espanol(string(traductor.palabra_trad));
-		string::size_type pos=texto.find(in,0);
+void ordenar(string texto){
+
 		
-		if(pos<string::npos){
-			texto.replace(pos,in.length(),espanol);	
-		}
+	
+		
+		
+	
+		FILE *archivo = fopen(nom_arch,"rb+");
+		Traductor traductor;
+		string aux=" ";
+		
+		string matriz[100][3];
+		
 		fread(&traductor,sizeof(Traductor),1,archivo);
-		id++;
-	}while(feof(archivo)==0);
-	
+		
+		
+		for(int i = 0; i<100;i++){
+			
+			for(int j = 0 ; j < 3; j++){
+							
+				switch (j)
+				{
+
+							
+				{
+					case 1:
+					string palabra(string (traductor.palabra));
+					matriz[i][j]= palabra;
+					
+					break;
+					}
+				
+				{
+					case 2:
+					string palabra(string (traductor.palabra_trad));
+					matriz[i][j] = palabra;
+					break;
+					}
+				
+				}		
+			}
+			fread(&traductor,sizeof(Traductor),1,archivo);
+
+		}
+		
+
+		for(int i = 100 ; i >=0 ; i--){
+
+			//for(int j = 0 ; j < 3 ; j++){
+			
+				string::size_type pos=texto.find(matriz[i][1]);
+				if(pos!=string::npos){
+					texto.replace(pos,matriz[i][1].length(),matriz[i][2]);
+					
+					string::size_type pos2=texto.find(";");
+					if(pos2!=string::npos){
+					texto.replace(pos2+1,aux.length(),"\n");
+						
+						}
+
+					
+					string ::size_type pos3=texto.find(")");
+					if(pos3!=string::npos){
+					texto.replace(pos3+2,aux.length(),"INICIO\n");
+
+						}
+					}						
+			
+		}
 	fclose(archivo);
-	cout<<texto<<"\n";
+		
+	cout<<texto;
 }
-
-
